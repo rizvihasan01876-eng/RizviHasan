@@ -515,3 +515,48 @@ section{ position:relative; }
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
 }
+
+/* ==========================================================================
+   SCROLL-CONTROLLED CINEMATIC FRAME-SEQUENCE BACKGROUND
+   New addition only — nothing above this line was changed for this feature.
+   Layer order: canvas (frame sequence) -> dark overlay -> site content.
+   See bg-frames.js for the loading/scroll-mapping logic; CONFIG for tuning.
+   ========================================================================== */
+.bg-scene{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--bg); /* fallback while the first frame loads */
+}
+.bg-scene__canvas{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 1.1s var(--ease);
+}
+.bg-scene__canvas.is-ready{ opacity: 1; }
+.bg-scene__overlay{
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(11,12,9,.55) 0%, rgba(11,12,9,.72) 45%, rgba(11,12,9,.85) 100%);
+}
+
+/* Everything that should render above the cinematic background needs an
+   explicit stacking context. .nav and .mobile-menu already have their own
+   position/z-index set above, so only main/footer (previously static) need
+   one here to sit above the new background layer. */
+main, .footer{ position: relative; z-index: 1; }
+
+/* Let a touch of the background glow show through translucent/soft-toned
+   surfaces instead of fully hiding it behind a flat panel. */
+.philosophy{ background: rgba(18,19,9,0.72); backdrop-filter: blur(2px); }
+.project-modal__panel{ background: rgba(18,19,9,0.94); }
+
+@media (prefers-reduced-motion: reduce){
+  .bg-scene__canvas{ transition: opacity .3s linear; }
+}
