@@ -26,6 +26,17 @@
 <!-- Replace data-* attributes below or edit CONFIG in script.js to update contact links/images site-wide -->
 
 <div class="grain" aria-hidden="true"></div>
+
+<!-- ============ CINEMATIC SCROLL-CONTROLLED BACKGROUND (new addition) ============
+     Full-screen frame-sequence background, scroll-scrubbed. Sits behind all
+     existing content. See bg-frames.js for the loading/scroll logic and the
+     CONFIG object at its top for the easiest way to customize frame count,
+     paths, or swap in a different sequence later. -->
+<div class="bg-scene" id="bgScene" aria-hidden="true">
+  <canvas class="bg-scene__canvas" id="bgSceneCanvas"></canvas>
+  <div class="bg-scene__overlay"></div>
+</div>
+
 <div class="cursor" id="cursor" aria-hidden="true">
   <span class="cursor-label"></span>
 </div>
@@ -577,6 +588,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.13/lenis.min.js"></script>
+<script src="bg-frames.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
