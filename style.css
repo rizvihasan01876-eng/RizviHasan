@@ -149,6 +149,7 @@ section{ position:relative; }
 .mobile-menu.is-open{ transform: translateY(0); }
 .mobile-menu nav{ display:flex; flex-direction:column; gap: 6px; }
 .mobile-menu nav a{ font-family: var(--display); font-size: 2.4rem; padding: 10px 0; border-bottom:1px solid var(--line-soft); }
+.mobile-menu__foot{ display:flex; flex-direction:column; gap:10px; }
 .mobile-menu__foot a{ color: var(--accent); font-size:.9rem; }
 
 /* ==========================================================================
