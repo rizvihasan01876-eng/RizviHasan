@@ -51,5 +51,27 @@ Swap `assets/rizvi-hasan.png` for a different file (keep the same filename, or u
 ### 4. Project visuals
 The five "Selected Work" cards currently use generated placeholder mockups (a subtle grid + project name) rather than real screenshots, since no project imagery was provided. To swap in real screenshots, replace the `.project__media` markup for each project in `index.html` with an `<img>` tag pointing at your image.
 
+## Cinematic scroll background (new)
+A full-screen, scroll-scrubbed image-sequence background sits behind the whole site — as you scroll, it plays forward; scroll up and it reverses. It never blocks clicks and always stays behind your content.
+
+**Files added for this feature (nothing else was touched):**
+- `bg-frames.js` — the whole engine: preloading, scroll → frame mapping, canvas drawing, mobile/reduced-motion handling. All tuning knobs are in the `BG_FRAMES_CONFIG` object at the very top.
+- `assets/frames/` — 102 full-resolution frames (`frame_000.webp` … `frame_101.webp`), used on desktop/tablet.
+- `assets/frames-mobile/` — the same 102 frames downscaled to 640px wide, used automatically on screens ≤ 760px to keep mobile fast.
+- A small CSS block was appended to the bottom of `style.css` for the background layer, plus `main`/`.footer` were given `position: relative; z-index: 1` so they always render above the background (nothing about their layout changed).
+
+**Note on the source files:** the ZIP you provided contained 102 `.webp` frames (not exactly 300 JPGs) — I used what was actually there. `.webp` is smaller and renders identically to JPG in all modern browsers, so this keeps things fast without any visual downside.
+
+**To swap in a different sequence later:**
+1. Drop your new frames into `assets/frames/` (and optionally a downscaled copy into `assets/frames-mobile/`), named `frame_000.webp`, `frame_001.webp`, etc.
+2. Update `frameCount` in `bg-frames.js` to match your new total.
+3. That's it — everything else (loading, scroll mapping, mobile switching) adapts automatically.
+
+**Performance behavior:**
+- Frame 0 loads first and is shown immediately; the rest load progressively in the background (6 at a time) without blocking the page.
+- Scrolling always requests the exact frame it needs first, so scrubbing stays responsive even mid-preload — it shows the nearest already-loaded frame as a placeholder until the exact one arrives.
+- Users with `prefers-reduced-motion` enabled see a single static frame instead of the scroll animation.
+- Mobile automatically uses the smaller 640px frame set.
+
 ## Content honesty
 No numbers, client names, revenue figures, awards, or certifications were invented anywhere on this site — only the information provided in the brief. Where an exact job title or date wasn't available, the timeline uses neutral labels instead (e.g. "Leadership & Growth").
