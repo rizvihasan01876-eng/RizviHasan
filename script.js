@@ -4,8 +4,11 @@
 
 /* ---------- EDITABLE CONFIG — update these, nothing else ---------- */
 const CONFIG = {
-  email: "your-email@example.com",       // TODO: replace with real email
-  linkedin: "https://www.linkedin.com/in/your-profile", // TODO: replace with real LinkedIn URL
+  email: "rizvihasan01876@gmail.com",
+  linkedin: "https://www.linkedin.com/in/rizvi-hasan-201036433",
+  facebook: "https://facebook.com/rizvihasan174",
+  instagram: "https://instagram.com/zihad_110",
+  whatsapp: "https://wa.me/8801876954397", // wa.me link built from your WhatsApp number
   formEndpoint: null,                     // TODO: set to a form backend (e.g. Formspree URL) to actually send messages
 };
 
@@ -24,16 +27,23 @@ const CONFIG = {
       if (!el) return;
       el.href = `mailto:${CONFIG.email}`;
     });
-    const liLinks = [
-      document.getElementById("connectLinkedin"),
-      document.getElementById("footerLinkedin"),
-      document.getElementById("mobileLinkedin"),
+
+    const externalLinkGroups = [
+      { key: "linkedin", ids: ["connectLinkedin", "footerLinkedin", "mobileLinkedin"] },
+      { key: "facebook", ids: ["footerFacebook", "mobileFacebook"] },
+      { key: "instagram", ids: ["footerInstagram", "mobileInstagram"] },
+      { key: "whatsapp", ids: ["connectWhatsapp", "footerWhatsapp", "mobileWhatsapp"] },
     ];
-    liLinks.forEach((el) => {
-      if (!el) return;
-      el.href = CONFIG.linkedin;
-      el.target = "_blank";
-      el.rel = "noopener";
+    externalLinkGroups.forEach(({ key, ids }) => {
+      const url = CONFIG[key];
+      if (!url) return;
+      ids.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.href = url;
+        el.target = "_blank";
+        el.rel = "noopener";
+      });
     });
   }
   wireContactLinks();
