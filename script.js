@@ -9,7 +9,7 @@ const CONFIG = {
   facebook: "https://facebook.com/rizvihasan174",
   instagram: "https://instagram.com/zihad_110",
   whatsapp: "https://wa.me/8801876954397", // wa.me link built from your WhatsApp number
-  formEndpoint: null,                     // TODO: set to a form backend (e.g. Formspree URL) to actually send messages
+  formEndpoint: "https://formspree.io/f/xrpgplyo",
 };
 
 (function () {
@@ -265,6 +265,7 @@ const CONFIG = {
   --------------------------------------------------------------------- */
   const navToggle = document.getElementById("navToggle");
   const mobileMenu = document.getElementById("mobileMenu");
+  const MOBILE_BREAKPOINT = 860;
   function openMobileMenu() {
     mobileMenu.classList.add("is-open");
     navToggle.setAttribute("aria-expanded", "true");
@@ -279,6 +280,20 @@ const CONFIG = {
     mobileMenu.classList.contains("is-open") ? closeMobileMenu() : openMobileMenu();
   });
   mobileMenu.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMobileMenu));
+
+  // Safety net: if the viewport crosses back above the mobile breakpoint
+  // (browser zoom, orientation change, resizing a window, devtools, etc.)
+  // while the mobile menu is open, force it closed so desktop nav and the
+  // mobile overlay can never render at the same time.
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (window.innerWidth > MOBILE_BREAKPOINT && mobileMenu.classList.contains("is-open")) {
+        closeMobileMenu();
+      }
+    }, 120);
+  });
 
   /* ---------------------------------------------------------------------
      Scroll progress rail
@@ -335,6 +350,19 @@ const CONFIG = {
         cursor.classList.remove("is-hover");
         label.textContent = "";
       });
+    });
+
+    // Safety net: never let the cursor stay stuck in its enlarged "hover"
+    // state — clear it whenever the pointer leaves the window, the tab
+    // loses focus, or the viewport changes (e.g. pinch-zoom).
+    function resetCursorHover() {
+      cursor.classList.remove("is-hover");
+      label.textContent = "";
+    }
+    document.addEventListener("mouseleave", resetCursorHover);
+    window.addEventListener("blur", resetCursorHover);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) resetCursorHover();
     });
   }
   initCursor();
@@ -576,7 +604,7 @@ const CONFIG = {
         status.textContent = "Sending…";
         const res = await fetch(CONFIG.formEndpoint, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
           body: JSON.stringify({
             name: document.getElementById("fName").value.trim(),
             email: document.getElementById("fEmail").value.trim(),
